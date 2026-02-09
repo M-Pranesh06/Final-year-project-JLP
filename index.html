@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Industrial Failure Prediction</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --primary: #2563eb;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(120deg, #e0e7ff, #f8fafc);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard {
+  width: 950px;
+  max-width: 95%;
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--primary), #1e40af);
+  color: white;
+  padding: 25px 30px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.header p {
+  margin-top: 6px;
+  opacity: 0.9;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 30px;
+  padding: 30px;
+}
+
+.card {
+  background: #f8fafc;
+  padding: 25px;
+  border-radius: 14px;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 20px;
+  color: #1e293b;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0 18px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #1e40af;
+}
+
+.result-box {
+  text-align: center;
+  padding: 20px;
+  border-radius: 14px;
+  display: none;
+}
+
+.result-box h3 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.risk {
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.safe {
+  background: #ecfdf5;
+  color: var(--success);
+}
+
+.danger {
+  background: #fef2f2;
+  color: var(--danger);
+}
+
+.footer-note {
+  text-align: center;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+  <div class="header">
+    <h1>Industrial Failure Prediction System</h1>
+    <p>Predictive Maintenance & Early Warning Prototype</p>
+  </div>
+
+  <div class="content">
+    
+    <div class="card">
+      <h2>Machine Parameters</h2>
+
+      <input id="air" type="number" placeholder="Air Temperature (K)">
+      <input id="process" type="number" placeholder="Process Temperature (K)">
+      <input id="speed" type="number" placeholder="Rotational Speed (RPM)">
+      <input id="torque" type="number" placeholder="Torque (Nm)">
+      <input id="wear" type="number" placeholder="Tool Wear (min)">
+
+      <button onclick="predict()">Analyze Machine Health</button>
+    </div>
+
+    <div class="card">
+      <h2>Prediction Result</h2>
+
+      <div id="result" class="result-box">
+        <h3 id="statusText"></h3>
+        <div class="risk" id="riskValue"></div>
+        <p id="message"></p>
+      </div>
+
+      <div class="footer-note">
+        Result generated using predictive logic simulation
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function predict() {
+  const air = +document.getElementById("air").value;
+  const process = +document.getElementById("process").value;
+  const speed = +document.getElementById("speed").value;
+  const torque = +document.getElementById("torque").value;
+  const wear = +document.getElementById("wear").value;
+
+  if (!air || !process || !speed || !torque || !wear) {
+    alert("Please enter all parameters");
+    return;
+  }
+
+  let riskScore = 0;
+
+  if (air > 305) riskScore += 15;
+  if (process > 315) riskScore += 20;
+  if (speed > 1600) riskScore += 15;
+  if (torque > 50) riskScore += 20;
+  if (wear > 200) riskScore += 30;
+
+  if (riskScore > 100) riskScore = 100;
+
+  const resultBox = document.getElementById("result");
+  const statusText = document.getElementById("statusText");
+  const riskValue = document.getElementById("riskValue");
+  const message = document.getElementById("message");
+
+  resultBox.style.display = "block";
+
+  if (riskScore >= 60) {
+    resultBox.className = "result-box danger";
+    statusText.innerText = "⚠ High Risk of Failure";
+    message.innerText = "Immediate maintenance is recommended to avoid breakdown.";
+  } else {
+    resultBox.className = "result-box safe";
+    statusText.innerText = "✅ Machine Operating Normally";
+    message.innerText = "No immediate failure risk detected.";
+  }
+
+  riskValue.innerText = riskScore + "%";
+}
+</script>
+
+</body>
+</html>
